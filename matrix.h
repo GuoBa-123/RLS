@@ -320,6 +320,13 @@ namespace math {
             ret.data.fill(1);
             return ret;
         }
+        static matrix<_col, _row> identity() {    
+            matrix<_col, _row> result = 0.0;
+            for (int i = 0; i < _row; ++i) {
+                result(i, i) = 1.0;
+            }
+            return result;
+        }
     protected:
         std::array <float, _row * _col> data;
     };
