@@ -8,11 +8,19 @@
 #pragma once
 
 #include <array>
+#include <cmath>
+#include <algorithm>
+#include <utility>
+#include <initializer_list>
+#include <type_traits>
+
+#ifndef BSP_ASSERT
 #define BSP_ASSERT(cond) ((void)0)
+#endif
 namespace math {
     template <int _row, int _col>
     class matrix {
-        static constexpr float eps = 1e-10;
+        static constexpr float eps = 1e-6f;
     public:
         static constexpr int rows() noexcept { return _row; }
         static constexpr int cols() noexcept { return _col; }
@@ -126,23 +134,23 @@ namespace math {
             }
             return ret;
         }
-        constexpr matrix &operator+= (float val) const {
+        constexpr matrix &operator+= (float val) {
             for (int i = 0; i < _row * _col; i++) data[i] += val;
             return *this;
         }
-        constexpr matrix &operator+= (const matrix &oth) const {
+        constexpr matrix &operator+= (const matrix &oth) {
             for (int i = 0; i < _row * _col; i++) {
                 data[i] += oth.data[i];
             }
             return *this;
         }
-        constexpr matrix &operator-= (const float &val) const {
+        constexpr matrix &operator-= (const float &val) {
             for (int i = 0; i < _row * _col; i++) {
                 data[i] -= val;
             }
             return *this;
         }
-        constexpr matrix &operator-= (const matrix &oth) const {
+        constexpr matrix &operator-= (const matrix &oth) {
             for (int i = 0; i < _row * _col; i++) {
                 data[i] -= oth.data[i];
             }
@@ -154,7 +162,7 @@ namespace math {
             }
             return *this;
         }
-        constexpr matrix &operator/= (const float &val) const {
+        constexpr matrix &operator/= (const float &val) {
             BSP_ASSERT(std::abs(val) > eps);
             for (int i = 0; i < _row * _col; i++) {
                 data[i] /= val;
@@ -320,12 +328,8 @@ namespace math {
             ret.data.fill(1);
             return ret;
         }
-        static matrix<_col, _row> identity() {    
-            matrix<_col, _row> result = 0.0;
-            for (int i = 0; i < _row; ++i) {
-                result(i, i) = 1.0;
-            }
-            return result;
+        static matrix identity() {
+            return matrix(1.0f);
         }
     protected:
         std::array <float, _row * _col> data;
